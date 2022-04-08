@@ -1,27 +1,37 @@
 from numpy import empty
-import requests
+# import requests
 import json
 import csv
 
-headers = {
-    'accept': 'application/json',
-}
 
-json_data = {
-    "criteria": {
-        "org_names": ["UNIVERSITY OF ARIZONA"]
-    },
-    "limit": 500
-}
+def checkEmptyValue(value):
+    if value:
+        return value
+    return ""
 
-response = requests.post('https://api.reporter.nih.gov/v2/projects/search', headers=headers, json=json_data)
+# headers = {
+#     'accept': 'application/json',
+# }
 
-data = json.loads(response.content)
+# json_data = {
+#     "criteria": {
+#         "org_names": ["UNIVERSITY OF ARIZONA"]
+#     },
+#     "limit": 500
+# }
 
-f = open("nih_csv_test.json", "w")
-f.write(json.dumps(data, indent=2))
+# response = requests.post('https://api.reporter.nih.gov/v2/projects/search', headers=headers, json=json_data)
+
+# data = json.loads(response.content)
+
+# f = open("nih_csv_test.json", "w")
+# f.write(json.dumps(data, indent=2))
+# f.close()
+
+
+f = open("nih_csv_test.json" ,"r")
+data = json.loads(f.read())
 f.close()
-
 
 f_mt = open('nih_reporter_main_table.csv', 'w', encoding='UTF8', newline='\n')
 
@@ -118,76 +128,22 @@ writer_mt.writerow(row)
 row = []
 
 for i in data["results"]:
-    if i["appl_id"]:
-        row.append(i["appl_id"])
-    else:
-        row.append("")
-
-    if i["subproject_id"]:
-        row.append(i["subproject_id"])
-    else:
-        row.append("")
-
-    if i["fiscal_year"]:
-        row.append(i["fiscal_year"])
-    else:
-        row.append("")
-
-    if i["project_num"]:
-        row.append(i["project_num"])
-    else:
-        row.append("")
-
-    if i["project_serial_num"]:
-        row.append(i["project_serial_num"])
-    else:
-        row.append("")
+    row.append(checkEmptyValue(i["appl_id"]))
+    row.append(checkEmptyValue(i["subproject_id"]))
+    row.append(checkEmptyValue(i["fiscal_year"]))
+    row.append(checkEmptyValue(i["project_num"]))
+    row.append(checkEmptyValue(i["project_serial_num"]))
 
     if i["organization"]:
-        if i["organization"]["org_name"]:
-            row.append(i["organization"]["org_name"])
-        else:
-            row.append("")
-
-        if i["organization"]["city"]:
-            row.append(i["organization"]["city"])
-        else:
-            row.append("")
-
-        if i["organization"]["country"]:
-            row.append(i["organization"]["country"])
-        else:
-            row.append("")
-
-        if i["organization"]["org_city"]:
-            row.append(i["organization"]["org_city"])
-        else:
-            row.append("")
-
-        if i["organization"]["org_country"]:
-            row.append(i["organization"]["org_country"])
-        else:
-            row.append("")
-
-        if i["organization"]["org_state"]:
-            row.append(i["organization"]["org_state"])
-        else:
-            row.append("")
-
-        if i["organization"]["org_state_name"]:
-            row.append(i["organization"]["org_state_name"])
-        else:
-            row.append("")
-
-        if i["organization"]["dept_type"]:
-            row.append(i["organization"]["dept_type"])
-        else:
-            row.append("")
-
-        if i["organization"]["fips_country_code"]:
-            row.append(i["organization"]["fips_country_code"])
-        else:
-            row.append("")
+        row.append(checkEmptyValue(i["organization"]["org_name"]))
+        row.append(checkEmptyValue(i["organization"]["city"]))
+        row.append(checkEmptyValue(i["organization"]["country"]))
+        row.append(checkEmptyValue(i["organization"]["org_city"]))
+        row.append(checkEmptyValue(i["organization"]["org_country"]))
+        row.append(checkEmptyValue(i["organization"]["org_state"]))
+        row.append(checkEmptyValue(i["organization"]["org_state_name"]))
+        row.append(checkEmptyValue(i["organization"]["dept_type"]))
+        row.append(checkEmptyValue(i["organization"]["fips_country_code"]))
 
         if i["organization"]["org_duns"]:
             if i["organization"]["org_duns"] is not empty:
@@ -205,35 +161,13 @@ for i in data["results"]:
         else:
             row.append("")
 
-        if i["organization"]["primary_duns"]:
-            row.append(i["organization"]["primary_duns"])
-        else:
-            row.append("")
+        row.append(checkEmptyValue(i["organization"]["primary_duns"]))
+        row.append(checkEmptyValue(i["organization"]["primary_uei"]))
+        row.append(checkEmptyValue(i["organization"]["org_fips"]))
+        row.append(checkEmptyValue(i["organization"]["org_ipf_code"]))
+        row.append(checkEmptyValue(i["organization"]["org_zipcode"]))
+        row.append(checkEmptyValue(i["organization"]["external_org_id"]))
 
-        if i["organization"]["primary_uei"]:
-            row.append(i["organization"]["primary_uei"])
-        else:
-            row.append("")
-
-        if i["organization"]["org_fips"]:
-            row.append(i["organization"]["org_fips"])
-        else:
-            row.append("")
-
-        if i["organization"]["org_ipf_code"]:
-            row.append(i["organization"]["org_ipf_code"])
-        else:
-            row.append("")
-
-        if i["organization"]["org_zipcode"]:
-            row.append(i["organization"]["org_zipcode"])
-        else:
-            row.append("")
-
-        if i["organization"]["external_org_id"]:
-            row.append(i["organization"]["external_org_id"])
-        else:
-            row.append("")
     else:
         row.append("")
         row.append("")
@@ -253,20 +187,9 @@ for i in data["results"]:
         row.append("")
         row.append("")
 
-    if i["award_type"]:
-        row.append(i["award_type"])
-    else:
-        row.append("")
-
-    if i["activity_code"]:
-        row.append(i["activity_code"])
-    else:
-        row.append("")
-
-    if i["award_amount"]:
-        row.append(i["award_amount"])
-    else:
-        row.append("")
+    row.append(checkEmptyValue(i["award_type"]))
+    row.append(checkEmptyValue(i["activity_code"]))
+    row.append(checkEmptyValue(i["award_amount"]))
 
     if i["is_active"] is not empty:
         row.append(i["is_active"])
@@ -274,40 +197,13 @@ for i in data["results"]:
         row.append("")
 
     if i["project_num_split"]:
-        if i["project_num_split"]["appl_type_code"]:
-            row.append(i["project_num_split"]["appl_type_code"])
-        else:
-            row.append("")
-
-        if i["project_num_split"]["activity_code"]:
-            row.append(i["project_num_split"]["activity_code"])
-        else:
-            row.append("")
-
-        if i["project_num_split"]["ic_code"]:
-            row.append(i["project_num_split"]["ic_code"])
-        else:
-            row.append("")
-
-        if i["project_num_split"]["serial_num"]:
-            row.append(i["project_num_split"]["serial_num"])
-        else:
-            row.append("")
-
-        if i["project_num_split"]["support_year"]:
-            row.append(i["project_num_split"]["support_year"])
-        else:
-            row.append("")
-
-        if i["project_num_split"]["full_support_year"]:
-            row.append(i["project_num_split"]["full_support_year"])
-        else:
-            row.append("")
-
-        if i["project_num_split"]["suffix_code"]:
-            row.append(i["project_num_split"]["suffix_code"])
-        else:
-            row.append("")
+        row.append(checkEmptyValue(i["project_num_split"]["appl_type_code"]))
+        row.append(checkEmptyValue(i["project_num_split"]["activity_code"]))
+        row.append(checkEmptyValue(i["project_num_split"]["ic_code"]))
+        row.append(checkEmptyValue(i["project_num_split"]["serial_num"]))
+        row.append(checkEmptyValue(i["project_num_split"]["support_year"]))
+        row.append(checkEmptyValue(i["project_num_split"]["full_support_year"]))
+        row.append(checkEmptyValue(i["project_num_split"]["suffix_code"]))
     else:
         row.append("")
         row.append("")
@@ -335,20 +231,9 @@ for i in data["results"]:
         row.append("")
 
     if i["agency_ic_admin"]:
-        if i["agency_ic_admin"]["code"]:
-            row.append(i["agency_ic_admin"]["code"])
-        else:
-            row.append("")
-
-        if i["agency_ic_admin"]["abbreviation"]:
-            row.append(i["agency_ic_admin"]["abbreviation"])
-        else:
-            row.append("")
-
-        if i["agency_ic_admin"]["name"]:
-            row.append(i["agency_ic_admin"]["name"])
-        else:
-            row.append("")
+        row.append(checkEmptyValue(i["agency_ic_admin"]["code"]))
+        row.append(checkEmptyValue(i["agency_ic_admin"]["abbreviation"]))
+        row.append(checkEmptyValue(i["agency_ic_admin"]["name"]))
     else:
         row.append("")
         row.append("")
@@ -374,31 +259,13 @@ for i in data["results"]:
         row.append("")
         row.append("")
 
-    if i["cong_dist"]:
-        row.append(i["cong_dist"])
-    else:
-        row.append("")
-
-    if i["project_start_date"]:
-        row.append(i["project_start_date"])
-    else:
-        row.append("")
-
-    if i["project_end_date"]:
-        row.append(i["project_end_date"])
-    else:
-        row.append("")
+    row.append(checkEmptyValue(i["cong_dist"]))
+    row.append(checkEmptyValue(i["project_start_date"]))
+    row.append(checkEmptyValue(i["project_end_date"]))
 
     if i["organization_type"]:
-        if i["organization_type"]["name"]:
-            row.append(i["organization_type"]["name"])
-        else:
-            row.append("")
-
-        if i["organization_type"]["code"]:
-            row.append(i["organization_type"]["code"])
-        else:
-            row.append("")
+        row.append(checkEmptyValue(i["organization_type"]["name"]))
+        row.append(checkEmptyValue(i["organization_type"]["code"]))
 
         if i["organization_type"]["is_other"] is not empty:
             row.append(i["organization_type"]["is_other"])
@@ -409,42 +276,15 @@ for i in data["results"]:
         row.append("")
         row.append("")
 
-
-    if i["full_foa"]:
-        row.append(i["full_foa"])
-    else:
-        row.append("")
-
+    row.append(checkEmptyValue(i["full_foa"]))
+    
     if i["full_study_section"]:
-        if i["full_study_section"]["srg_code"]:
-            row.append(i["full_study_section"]["srg_code"])
-        else:
-            row.append("")
-
-        if i["full_study_section"]["srg_flex"]:
-            row.append(i["full_study_section"]["srg_flex"])
-        else:
-            row.append("")
-
-        if i["full_study_section"]["sra_designator_code"]:
-            row.append(i["full_study_section"]["sra_designator_code"])
-        else:
-            row.append("")
-
-        if i["full_study_section"]["sra_flex_code"]:
-            row.append(i["full_study_section"]["sra_flex_code"])
-        else:
-            row.append("")
-
-        if i["full_study_section"]["group_code"]:
-            row.append(i["full_study_section"]["group_code"])
-        else:
-            row.append("")
-
-        if i["full_study_section"]["name"]:
-            row.append(i["full_study_section"]["name"])
-        else:
-            row.append("")
+        row.append(checkEmptyValue(i["full_study_section"]["srg_code"]))
+        row.append(checkEmptyValue(i["full_study_section"]["srg_flex"]))
+        row.append(checkEmptyValue(i["full_study_section"]["sra_designator_code"]))
+        row.append(checkEmptyValue(i["full_study_section"]["sra_flex_code"]))
+        row.append(checkEmptyValue(i["full_study_section"]["group_code"]))
+        row.append(checkEmptyValue(i["full_study_section"]["name"]))
     else:
         row.append("")
         row.append("")
@@ -453,106 +293,32 @@ for i in data["results"]:
         row.append("")
         row.append("")
 
-    if i["award_notice_date"]:
-        row.append(i["award_notice_date"])
-    else:
-        row.append("")
+    row.append(checkEmptyValue(i["award_notice_date"]))
 
     if i["is_new"] is not empty:
         row.append(i["is_new"])
     else:
         row.append("")
-
-    if i["mechanism_code_dc"]:
-        row.append(i["mechanism_code_dc"])
-    else:
-        row.append("")
-
-    if i["core_project_num"]:
-        row.append(i["core_project_num"])
-    else:
-        row.append("")
-
-    if i["terms"]:
-        row.append(i["terms"])
-    else:
-        row.append("")
-
-    if i["pref_terms"]:
-        row.append(i["pref_terms"])
-    else:
-        row.append("")
-
-    if i["abstract_text"]:
-        row.append(i["abstract_text"])
-    else:
-        row.append("")
-
-    if i["project_title"]:
-        row.append(i["project_title"])
-    else:
-        row.append("")
-
-    if i["phr_text"]:
-        row.append(i["phr_text"])
-    else:
-        row.append("")
-
-    if i["agency_code"]:
-        row.append(i["agency_code"])
-    else:
-        row.append("")
-
-    if i["covid_response"]:
-        row.append(i["covid_response"])
-    else:
-        row.append("")
-
-    if i["arra_funded"]:
-        row.append(i["arra_funded"])
-    else:
-        row.append("")
-
-    if i["budget_start"]:
-        row.append(i["budget_start"])
-    else:
-        row.append("")
-
-    if i["budget_end"]:
-        row.append(i["budget_end"])
-    else:
-        row.append("")
-
-    if i["cfda_code"]:
-        row.append(i["cfda_code"])
-    else:
-        row.append("")
-
-    if i["funding_mechanism"]:
-        row.append(i["funding_mechanism"])
-    else:
-        row.append("")
-
-    if i["direct_cost_amt"]:
-        row.append(i["direct_cost_amt"])
-    else:
-        row.append("")
-
-    if i["indirect_cost_amt"]:
-        row.append(i["indirect_cost_amt"])
-    else:
-        row.append("")
-
-    if i["project_detail_url"]:
-        row.append(i["project_detail_url"])
-    else:
-        row.append("")
-
-    if i["date_added"]:
-        row.append(i["date_added"])
-    else:
-        row.append("")
     
+    row.append(checkEmptyValue(i["mechanism_code_dc"]))
+    row.append(checkEmptyValue(i["core_project_num"]))
+    row.append(checkEmptyValue(i["terms"]))
+    row.append(checkEmptyValue(i["pref_terms"]))
+    row.append(checkEmptyValue(i["abstract_text"]))
+    row.append(checkEmptyValue(i["project_title"]))
+    row.append(checkEmptyValue(i["phr_text"]))
+    row.append(checkEmptyValue(i["agency_code"]))
+    row.append(checkEmptyValue(i["covid_response"]))
+    row.append(checkEmptyValue(i["arra_funded"]))
+    row.append(checkEmptyValue(i["budget_start"]))
+    row.append(checkEmptyValue(i["budget_end"]))
+    row.append(checkEmptyValue(i["cfda_code"]))
+    row.append(checkEmptyValue(i["funding_mechanism"]))
+    row.append(checkEmptyValue(i["direct_cost_amt"]))
+    row.append(checkEmptyValue(i["indirect_cost_amt"]))
+    row.append(checkEmptyValue(i["project_detail_url"]))
+    row.append(checkEmptyValue(i["date_added"]))
+
     writer_mt.writerow(row)
     row = []
 
@@ -610,9 +376,6 @@ for i in data["results"]:
 
 f_pi.close()
 
-
-
-
 #Spending categories
 header = []
 row = []
@@ -648,6 +411,3 @@ for i in data["results"]:
                 row = []
 
 f_sc.close()
-
-
-
